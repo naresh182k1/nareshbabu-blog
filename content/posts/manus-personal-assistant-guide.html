@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manus as Your AI Personal Assistant — The Complete Telegram Playbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0D0C0A;
+    --paper: #F9F6EF;
+    --cream: #F2EDE0;
+    --gold: #C89B3C;
+    --gold-light: #E8C56A;
+    --gold-pale: #F7EDD0;
+    --charcoal: #2A2820;
+    --mid: #6B6556;
+    --rule: #D8CFBA;
+    --teal: #1E6E6B;
+    --teal-light: #D4EDEB;
+    --coral: #C44B3A;
+    --blue: #2B4FA0;
+    --blue-light: #D8E4F7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.7; font-size: 17px; }
+
+  .masthead { background: var(--ink); color: var(--paper); padding: 64px 48px 56px; position: relative; overflow: hidden; }
+  .masthead::before { content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; border: 1px solid rgba(200,155,60,0.2); border-radius: 50%; }
+  .masthead::after { content: ''; position: absolute; bottom: -80px; left: 20%; width: 200px; height: 200px; border: 1px solid rgba(200,155,60,0.12); border-radius: 50%; }
+  .masthead-tag { display: inline-block; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold); padding: 4px 12px; margin-bottom: 32px; }
+  .masthead h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(36px, 5vw, 62px); font-weight: 900; line-height: 1.05; max-width: 820px; margin-bottom: 24px; }
+  .masthead h1 em { font-style: italic; color: var(--gold-light); }
+  .masthead-sub { font-size: 18px; font-weight: 300; color: rgba(249,246,239,0.7); max-width: 620px; line-height: 1.6; margin-bottom: 40px; }
+  .masthead-meta { display: flex; align-items: center; gap: 24px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: rgba(249,246,239,0.45); text-transform: uppercase; flex-wrap: wrap; }
+  .masthead-meta .dot { color: var(--gold); }
+
+  .container { max-width: 820px; margin: 0 auto; padding: 0 40px; }
+  .body { padding: 48px 0; }
+  .body p { color: var(--charcoal); margin-bottom: 20px; font-size: 16.5px; line-height: 1.78; }
+  .body p.intro-p { font-size: 17.5px; font-weight: 300; }
+
+  .opening { padding: 64px 0 0; border-bottom: 1px solid var(--rule); }
+  .opening p.lede { font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.5vw, 26px); font-style: italic; line-height: 1.55; color: var(--charcoal); margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--rule); }
+
+  .toc { background: var(--gold-pale); border-left: 3px solid var(--gold); padding: 28px 32px; margin: 40px 0; }
+  .toc-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  .toc ol { list-style: none; counter-reset: toc; }
+  .toc li { counter-increment: toc; font-size: 14px; padding: 5px 0; color: var(--charcoal); display: flex; align-items: baseline; gap: 10px; }
+  .toc li::before { content: counter(toc, decimal-leading-zero); font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold); flex-shrink: 0; }
+
+  .section { padding: 56px 0 0; border-top: 1px solid var(--rule); margin-top: 48px; }
+  .section-num { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--gold); text-transform: uppercase; display: block; margin-bottom: 12px; }
+  .section h2 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 3.5vw, 38px); font-weight: 700; line-height: 1.2; color: var(--ink); margin-bottom: 24px; }
+  .section h2 em { font-style: italic; color: var(--gold); }
+  .section h3 { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 700; color: var(--ink); margin: 32px 0 12px; }
+  .section h3::before { content: '→ '; color: var(--gold); font-style: normal; font-family: 'DM Sans', sans-serif; }
+
+  .pullquote { border-left: 3px solid var(--gold); padding: 16px 28px; margin: 36px 0; background: var(--cream); }
+  .pullquote p { font-family: 'Playfair Display', serif; font-size: 19px; font-style: italic; color: var(--charcoal); margin: 0; line-height: 1.55; }
+
+  .command-block { background: var(--ink); border-radius: 6px; padding: 20px 24px; margin: 24px 0; position: relative; }
+  .command-block::before { content: 'TELEGRAM MESSAGE'; position: absolute; top: -10px; left: 16px; background: var(--gold); color: var(--ink); font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.2em; padding: 2px 8px; }
+  .command-block code { font-family: 'DM Mono', monospace; font-size: 13.5px; color: #E8DFC8; display: block; line-height: 1.7; white-space: pre-wrap; }
+  .command-block .prompt { color: var(--gold-light); font-weight: 500; }
+  .command-block .response { color: #9BC4BD; margin-top: 8px; }
+
+  .cap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 32px 0; }
+  .cap-card { background: var(--paper); border: 0.5px solid var(--rule); border-top: 2px solid var(--gold); padding: 20px 22px; }
+  .cap-card-icon { width: 36px; height: 36px; background: var(--gold-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 16px; }
+  .cap-card h4 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+  .cap-card p { font-size: 13px; color: var(--mid); line-height: 1.55; margin: 0; }
+
+  .steps { margin: 28px 0; }
+  .step { display: flex; gap: 20px; padding: 20px 0; border-bottom: 0.5px solid var(--rule); }
+  .step:last-child { border-bottom: none; }
+  .step-num { width: 32px; height: 32px; border: 1.5px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+  .step-content h4 { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+  .step-content p { font-size: 14px; color: var(--mid); line-height: 1.6; margin: 0; }
+
+  .info-box { background: var(--teal-light); border-left: 3px solid var(--teal); padding: 20px 24px; margin: 28px 0; }
+  .info-box-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; }
+  .info-box p { font-size: 14px; color: #1A4A48; line-height: 1.65; margin: 0; }
+
+  .warn-box { background: #FEF3E2; border-left: 3px solid var(--coral); padding: 20px 24px; margin: 28px 0; }
+  .warn-box-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--coral); margin-bottom: 8px; }
+  .warn-box p { font-size: 14px; color: #5A2E1A; line-height: 1.65; margin: 0; }
+
+  .matrix { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 14px; }
+  .matrix thead tr { background: var(--ink); color: var(--paper); }
+  .matrix thead th { padding: 12px 16px; text-align: left; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; font-weight: 400; }
+  .matrix tbody tr { border-bottom: 0.5px solid var(--rule); }
+  .matrix tbody tr:nth-child(even) { background: var(--cream); }
+  .matrix tbody td { padding: 11px 16px; color: var(--charcoal); vertical-align: top; }
+  .matrix tbody td:first-child { font-weight: 500; color: var(--ink); }
+  .badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 3px; letter-spacing: 0.05em; }
+  .badge-auto { background: #D4EDEB; color: var(--teal); }
+  .badge-approval { background: var(--gold-pale); color: #7A5C1A; }
+
+  .prompt-lib { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+  .prompt-item { background: var(--cream); border: 0.5px solid var(--rule); border-radius: 4px; padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start; }
+  .prompt-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: var(--gold); background: var(--gold-pale); border: 1px solid var(--gold); padding: 3px 8px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .prompt-item p { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--charcoal); line-height: 1.6; margin: 0; }
+
+  .arch-diagram { background: var(--ink); border-radius: 8px; padding: 36px 24px 28px; margin: 36px 0; text-align: center; position: relative; overflow: hidden; }
+  .arch-diagram::before { content: 'SYSTEM ARCHITECTURE'; position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: rgba(200,155,60,0.55); white-space: nowrap; }
+  .arch-row { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 7px 0; flex-wrap: wrap; }
+  .arch-node { background: rgba(249,246,239,0.06); border: 1px solid rgba(200,155,60,0.3); border-radius: 4px; padding: 9px 16px; font-family: 'DM Mono', monospace; font-size: 11px; color: #E8DFC8; white-space: nowrap; }
+  .arch-node.gold { background: rgba(200,155,60,0.18); border-color: var(--gold); color: var(--gold-light); }
+  .arch-node.teal { background: rgba(30,110,107,0.2); border-color: #4AADA9; color: #9FD8D5; }
+  .arch-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: rgba(249,246,239,0.28); margin: 3px 0 6px; }
+
+  .divider { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 0.5px; background: var(--rule); }
+  .divider span { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--gold); }
+
+  .footer { background: var(--cream); border-top: 1px solid var(--rule); padding: 40px 0; margin-top: 64px; }
+  .footer-inner { max-width: 820px; margin: 0 auto; padding: 0 40px; }
+  .footer p { font-size: 13px; color: var(--mid); line-height: 1.65; }
+  .footer .tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--gold); display: block; margin-bottom: 10px; }
+
+  ul.styled { list-style: none; margin: 16px 0 20px; padding: 0; }
+  ul.styled li { padding: 5px 0 5px 22px; font-size: 15px; color: var(--charcoal); line-height: 1.65; position: relative; }
+  ul.styled li::before { content: '—'; position: absolute; left: 0; color: var(--gold); }
+
+  @media (max-width: 640px) {
+    .masthead { padding: 40px 24px 36px; }
+    .container { padding: 0 20px; }
+    .footer-inner { padding: 0 20px; }
+    .arch-diagram { padding: 28px 12px 20px; }
+    .arch-node { font-size: 10px; padding: 7px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="container">
+    <span class="masthead-tag">AI Productivity Playbook · For IT Professionals</span>
+    <h1>Your <em>Always-On</em> AI Personal Assistant — Powered by Manus and Controlled from Telegram</h1>
+    <p class="masthead-sub">A practical guide for IT professionals on delegating presentations, videos, LinkedIn outreach, emails, calendar bookings, task management, daily reminders, and personal bookings — all from a single Telegram message.</p>
+    <div class="masthead-meta">
+      <span>Manus AI</span>
+      <span class="dot">◆</span>
+      <span>Telegram Integration</span>
+      <span class="dot">◆</span>
+      <span>2026 Edition</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="opening body">
+    <p class="lede">"Imagine a personal assistant who never sleeps, never misses a deadline, and responds to a single Telegram message — drafting your LinkedIn post, booking your dinner, prepping your deck, sending your emails, and briefing you on what needs doing by 9 AM. That's Manus, configured right."</p>
+    <p class="intro-p">Manus is an autonomous AI agent — not just a chatbot. It can browse the web, write and execute code, produce files, interact with APIs, and coordinate multi-step workflows without you supervising each step. When paired with Telegram as your command interface, you have a personal operating system you can run from anywhere: your phone, a cab, a coffee meeting, or between back-to-back calls.</p>
+    <p>This guide is written for IT professionals — developers, architects, consultants, product managers, and tech leaders — who want to reclaim hours in their week by delegating the operational, administrative, and creative tasks that quietly consume their days. You don't need to write a single line of code to set this up. You just need to know what to ask.</p>
+    <div class="toc">
+      <p class="toc-title">Contents</p>
+      <ol>
+        <li>How the Manus + Telegram architecture works</li>
+        <li>Creating presentations on command</li>
+        <li>Generating video scripts and AI video</li>
+        <li>LinkedIn outreach and content posting</li>
+        <li>Sending emails with full context</li>
+        <li>Booking calendar invites and meetings</li>
+        <li>Creating tasks in Claude Cowork</li>
+        <li>Daily task reminders — your morning briefing</li>
+        <li>Booking travel, restaurants, and services</li>
+        <li>Master prompt library</li>
+        <li>Tips, limits, and best practices</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<div class="container">
+  <div class="section body">
+    <span class="section-num">01 — Architecture</span>
+    <h2>How the Manus + <em>Telegram</em> System Works</h2>
+    <p>Before getting into individual capabilities, understand the control flow. You are the decision-maker. Telegram is your command interface. Manus is the execution engine. Claude Cowork (or any task tool you connect) is your queue for approvals and ongoing work.</p>
+
+    <div class="arch-diagram">
+      <div style="margin-top:18px;">
+        <div class="arch-row"><div class="arch-node gold">You (Telegram)</div></div>
+        <div class="arch-label">↓ Natural language instruction</div>
+        <div class="arch-row"><div class="arch-node gold">Manus Agent</div></div>
+        <div class="arch-label">↓ Orchestrates tools and sub-agents</div>
+        <div class="arch-row">
+          <div class="arch-node teal">Presentations</div>
+          <div class="arch-node teal">Video / Scripts</div>
+          <div class="arch-node teal">Email / LinkedIn</div>
+          <div class="arch-node teal">Calendar</div>
+        </div>
+        <div class="arch-label">↓ Returns output or requests your approval</div>
+        <div class="arch-row">
+          <div class="arch-node">Telegram Preview</div>
+          <div class="arch-node">Cowork Task</div>
+        </div>
+        <div class="arch-label">↓ On your explicit approval</div>
+        <div class="arch-row"><div class="arch-node gold">Action Executed</div></div>
+      </div>
+    </div>
+
+    <h3>Setting up the Telegram bridge</h3>
+    <p>Manus supports webhook-based integrations. You connect a Telegram bot to Manus via the agent's API endpoint. Every message you send the bot becomes an instruction. Manus processes it, runs the workflow, and replies — with a file, a result, or an approval request before taking any high-stakes action.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Create a Telegram bot</h4>
+          <p>Message @BotFather in Telegram and run /newbot. Copy the API token it generates.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Create a Manus workflow with a webhook trigger</h4>
+          <p>In Manus, create a new workflow. Set the trigger type to Webhook / API. Copy the incoming webhook URL it provides.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Point your bot at Manus</h4>
+          <p>Use Telegram's setWebhook API to route your bot's incoming messages to the Manus webhook URL. Every message you send now triggers your workflow.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Connect your tools</h4>
+          <p>Inside Manus, connect Gmail, Google Calendar, LinkedIn, and Claude Cowork via their native OAuth or API integrations.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Configure your approval gate</h4>
+          <p>For irreversible or public actions, set Manus to send a Telegram preview and wait for your "Confirm" before executing.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <p class="info-box-title">Security First</p>
+      <p>Restrict your Telegram bot to respond only to your own chat ID. Add a sender ID check as the very first step in every Manus workflow: if sender_id != YOUR_ID → stop and ignore. This ensures nobody else can trigger your agent even if they find the bot username.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="container">
+  <div class="section body">
+    <span class="section-num">02 — Presentations</span>
+    <h2>Creating <em>Presentations</em> on Command</h2>
+    <p>One of Manus's most powerful capabilities for IT professionals. Describe the deck you need — audience, purpose, structure, tone — and Manus produces a fully structured PowerPoint or Google Slides file with slide titles, content, and speaker notes. What used to take three hours of slide-wrestling now takes the time it takes to type a paragraph on your phone.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">You → Manus:</span>
+Create a 10-slide presentation on cloud infrastructure modernisation 
+for a CTO audience. Cover: current-state pain points, a microservices 
+migration roadmap, a 3-agent automation architecture, and a summary 
+ROI slide. Clean dark enterprise theme. Deliver as PPTX.</code>
+      <code><span class="response">Manus → You:
+✅ Deck ready. 10 slides + speaker notes.
+[📎 Cloud_Modernisation_v1.pptx]
+Reply "Revise slide 5" or "Add a risk slide" to iterate.</span></code>
+    </div>
+
+    <h3>What to include in your prompt</h3>
+    <ul class="styled">
+      <li>Target audience — Manus adjusts depth, language, and structure accordingly</li>
+      <li>Slide count and the key sections you need covered</li>
+      <li>Specific frameworks, data points, or architecture patterns to reference</li>
+      <li>Colour palette or branding if applicable</li>
+      <li>Tone: executive summary, technical deep-dive, sales pitch, or internal update</li>
+      <li>Output format: PPTX, Google Slides, or PDF</li>
+    </ul>
+
+    <div class="pullquote">
+      <p>Manus doesn't just fill slides — it reasons about narrative structure. It knows an executive deck opens with the business pain, not the solution. A technical deck needs the architecture diagram before the implementation roadmap.</p>
+    </div>
+
+    <h3>Iterating via Telegram</h3>
+    <p>Manus maintains context across the conversation, so you can refine your deck in a natural back-and-forth — exactly like briefing a designer, but at typing speed from your phone.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">You:</span> Strengthen the ROI slide. Add a 3-year NPV model assuming 
+$500K implementation cost and 35% reduction in manual ops overhead.
+
+<span class="response">Manus:</span> Updated. ROI slide now includes:
+Year 1: –$500K | Year 2: +$175K | Year 3: +$350K
+3-year NPV at 8% discount rate: +$25K
+[📎 Cloud_Modernisation_v2.pptx]</code>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="container">
+  <div class="section body">
+    <span class="section-num">03 — Video Content</span>
+    <h2>Generating <em>Video Scripts</em> and AI Video</h2>
+    <p>Manus handles two video workflows: generating scripts with scene direction (ready for a video editor or AI generation tool), and short-form talking-head scripts optimised for LinkedIn or YouTube — structured, timed, and built around hooks that stop the scroll.</p>
+    <p>For AI-generated video with an avatar, Manus integrates with tools like HeyGen or Synthesia via API — submitting your script and returning a rendered video link directly to your Telegram.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">You:</span> Write a 90-second LinkedIn video script on why IT modernisation 
+projects fail in the final 20%. Hook in the first 5 seconds. 
+Honest, practitioner tone. No jargon. CTA at the end.
+
+<span class="response">Manus:</span> Script ready.
+Hook: "Most tech transformations don't fail at the start — 
+they fail at the handover. Here's why."
+[📎 LinkedIn_Script_90s.docx]
+Reply "Generate as HeyGen video" to produce an AI avatar version.</code>
+    </div>
+
+    <h3>The full pipeline — from idea to posted video</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content"><h4>Script generation</h4><p>Manus writes the script with hook, pacing cues, and suggested B-roll directions.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content"><h4>Your approval</h4><p>Manus sends the script preview to Telegram. You reply "Looks good" or request edits.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content"><h4>AI video generation</h4><p>Manus submits to HeyGen or Synthesia using your pre-configured avatar and voice settings.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content"><h4>Delivery and posting</h4><p>The video link returns to Telegram. Reply "Post to LinkedIn" and Manus handles publishing — with a final confirmation from you first.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="container">
+  <div class="section body">
+    <span class="section-num">04 — LinkedIn</span>
+    <h2><em>LinkedIn</em> Outreach and Content Posting</h2>
+    <p>Manus handles two distinct LinkedIn workflows: personalised outreach DMs and connection requests, and content publishing — posts, carousels, and long-form articles. Both require your explicit approval before anything goes live or gets sent, protecting your professional reputation at all times.</p>
+
+    <h3>Personalised outreach</h3>
+    <p>Whether you're prospecting for consulting work, building partnerships, or growing your network, Manus researches the prospect, drafts a personalised first message under 120 words, and queues it for your review before sending.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">You:</span> Draft a LinkedIn DM to a VP Engineering at a mid-size SaaS company. 
+My angle: I help engineering teams cut deployment cycle time using 
+agentic CI/CD automation. Under 110 words. No pitch in the first 
+message. CTA: a 20-minute conversation.
+
+<span class="response">Manus:</span> Draft ready:
+"Hi [Name], your recent post on deployment bottlenecks resonated — 
+we've been seeing the same pattern across engineering teams at scale. 
+I've been working on agentic automation that's cut release cycle 
+times by 40–60% for similar orgs. Would love to hear how your team 
+is approaching it. Open for a quick 20-minute chat next week?"
+
+Reply "Send" to submit or "Edit: [changes]" to refine.</code>
+    </div>
+
+    <h3>Posting content</h3>
+    <p>Technical insights, lessons from the field, opinion pieces — Manus drafts, formats, and on your approval publishes directly to your LinkedIn profile via the LinkedIn API.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">You:</span> Write a LinkedIn post: 3 things nobody tells you before 
+leading your first AI implementation. First-person, honest tone. 
+Hook in line 1. End with a question to drive comments. Max 200 words.
+
+<span class="response">Manus:</span> Draft ready. Hook: "I led my first AI project with full 
+confidence. I was wrong about almost everything."
+[Preview — 196 words]
+Reply "Post now" or "Schedule: Thursday 8am"</code>
+    </div>
+
+    <div class="warn-box">
+      <p class="warn-box-title">Approval Gate — Always Active</p>
+      <p>Manus will never send a LinkedIn message or publish a post without your explicit "Send" or "Post now" confirmation in Telegram. This is a non-negotiable gate. Your public presence is always under your control.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="container">
+  <div class="section body">
+    <span class="section-num">05 — Email</span>
+    <h2>Sending <em>Emails</em> with Full Context</h2>
+    <p>Manus connects to Gmail or Outlook and composes, personalises, and sends emails on your behalf — from meeting follow-ups to prospect outreach to project status updates. Every email is shown as a Telegram preview before anything is sent. Nothing goes out without your approval.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">You:</span> Send a follow-up to the client I met yesterday about the 
+API integration project. Reference the discussion on data pipeline 
+latency. Suggest a 45-minute technical deep-dive next week. 
+Professional but warm. Sign off as me.
+
+<span class="response">Manus:</span> Email drafted.
+To: [client email pulled from your calendar]
+Subject: "Following up — API Integration Technical Review"
+[150-word preview]
+Reply "Send" to deliver, or "Edit: [instructions]" to adjust.</code>
+    </div>
+
+    <h3>Bulk personalised outreach</h3>
+    <p>For prospecting campaigns, Manus loads a contact list from a spreadsheet and generates individually tailored emails for each contact — using their role, company, and other available fields — then queues them all for a single batch review before sending.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">You:</span> Load prospects.csv. Draft personalised cold outreach for each 
+contact using their company name and job title. Subject: "AI Automation 
+for [Company Name]". Max 120 words each. Show me the first 5 
+for review before sending the full batch.
+
+<span class="response">Manus:</span> 5 draft previews ready for your review.
+[Previews 1–5 in Telegram]
+Reply "Approve batch" to queue all for send, or
+"Revise: [instructions]" to adjust the tone first.</code>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="container">
+  <div class="section body">
+    <span class="section-num">06 — Calendar</span>
+    <h2>Booking <em>Calendar Invites</em> and Meetings</h2>
+    <p>Manus connects to Google Calendar and creates, updates, and cancels events — sending invites to all participants. Before proposing a time, it checks your calendar for conflicts, so it will never double-book you or schedule over an existing commitment.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">You:</span> Book a 45-minute technical review with the client team next 
+Tuesday between 10am and 2pm. Add a Google Meet link. 
+Title: "API Integration — Architecture Review". 
+Send the invite to client@company.com and copy me.
+
+<span class="response">Manus:</span> Tuesday 11:00–11:45 AM is free on your calendar.
+Event: "API Integration — Architecture Review"
+Date: Tuesday [date] · 11:00 AM
+Attendees: client@company.com + you
+Meet link: [auto-generated]
+Reply "Confirm" to send the invite.</code>
+    </div>
+
+    <h3>Intelligent scheduling behaviours</h3>
+    <ul class="styled">
+      <li>Reads your existing events to avoid all conflicts before suggesting any slot</li>
+      <li>Respects blackout windows you define — "no meetings before 9am", "Friday afternoons free"</li>
+      <li>Auto-generates Zoom, Google Meet, or Teams links based on your default preference</li>
+      <li>Sets reminders at your preferred intervals — e.g. 15 minutes and 24 hours before</li>
+      <li>Suggests reschedule options if an existing conflict appears on that day</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECTION 7 -->
+<div class="container">
+  <div class="section body">
+    <span class="section-num">07 — Claude Cowork Tasks</span>
+    <h2>Creating Tasks in <em>Claude Cowork</em></h2>
+    <p>Claude Cowork is an AI-assisted task and project workspace. Manus bridges Telegram and Cowork — when you give it an instruction, it simultaneously executes it and creates a corresponding task record, giving you a full log of what's been delegated, what's in progress, and what needs your review.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">You:</span> Create a Cowork task: "Prepare cloud migration deck for client 
+kickoff". Priority: High. Due: this Friday. Add context: deck should 
+cover current architecture, migration phases, risks, and a go-live 
+timeline. Assign to me.
+
+<span class="response">Manus:</span> ✅ Task created in Claude Cowork.
+Title: "Prepare cloud migration deck for client kickoff"
+Priority: High | Due: Friday [date]
+Context notes attached.
+Reply "Start now" and I'll begin building the deck immediately.</code>
+    </div>
+
+    <h3>Querying your tasks from Telegram</h3>
+    <p>Pull your open task list at any time directly from Telegram. Manus surfaces what's open by priority and flags anything sitting in your approval queue.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">You:</span> What are my open high-priority tasks in Cowork?
+
+<span class="response">Manus:</span> 🔴 3 high-priority tasks open:
+1. Cloud migration deck — due Friday
+2. Client proposal draft — due Thursday
+3. Infrastructure audit report — due tomorrow
+Want me to start on any of these now?</code>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 8 -->
+<div class="container">
+  <div class="section body">
+    <span class="section-num">08 — Daily Reminders</span>
+    <h2>Your <em>Morning Briefing</em> — Every Day at 9 AM</h2>
+    <p>Configure Manus to push a structured daily briefing to your Telegram every morning — covering your schedule, open high-priority tasks, items pending your approval, and a suggested first action. This single automation saves most IT professionals 20–30 minutes of inbox-checking and context-switching every single morning.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">Manus → You (auto, every weekday 9:00 AM):</span>
+━━━━━━━━━━━━━━━━━━━━━━━━
+☀️  GOOD MORNING — Wednesday, March 18
+━━━━━━━━━━━━━━━━━━━━━━━━
+📅 TODAY'S MEETINGS:
+• 10:00 AM — Client Architecture Review (45 min, Meet)
+• 2:30 PM — Sprint Retro (30 min, Teams)
+
+🔴 HIGH PRIORITY:
+• Cloud migration deck — due FRIDAY (not started)
+• Client proposal draft — due tomorrow
+
+📬 AWAITING YOUR APPROVAL:
+• LinkedIn post — "3 things no one tells you"
+• Follow-up email to client re: API project
+
+💡 SUGGESTED FIRST ACTION:
+Start the migration deck now — reply "Start migration deck"
+━━━━━━━━━━━━━━━━━━━━━━━━</code>
+    </div>
+
+    <h3>Setting up the briefing automation</h3>
+    <p>Create a scheduled Manus workflow set to run at your chosen wake-up time. Configure it to pull from Google Calendar (today's events), Claude Cowork (open tasks by priority), your Telegram approval queue (pending items), and any flags left over from the previous session.</p>
+
+    <div class="info-box">
+      <p class="info-box-title">Customise It to Your Style</p>
+      <p>You control the format entirely. Want it shorter? Tell Manus: "Keep the morning briefing to 5 bullet points max." Want weather added? Done. Want the suggested first action to always surface your highest-value item? Define that logic in your system prompt once and it applies every day automatically.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 9 -->
+<div class="container">
+  <div class="section body">
+    <span class="section-num">09 — Bookings</span>
+    <h2>Booking <em>Travel, Restaurants</em> and Services</h2>
+    <p>Beyond work tasks, Manus handles personal logistics — finding restaurants, comparing flights, making reservations, and sourcing hotels. For anything involving payment or an irreversible commitment, it surfaces the options and waits for your explicit confirmation before proceeding.</p>
+
+    <div class="command-block">
+      <code><span class="prompt">You:</span> Find a good Japanese restaurant near the city centre for 
+Friday dinner, 2 people, 7:30 PM. Mid-to-high budget. 
+Must have online reservations.
+
+<span class="response">Manus:</span> 3 options in your area:
+1. 🍣 Nobu — City Centre, rated 4.8, $$$$, 7:30 PM available ✅
+2. 🍣 Zuma — Waterfront, rated 4.7, $$$, 7:15 PM available ✅
+3. 🍣 Ki Restaurant — Financial District, rated 4.6, $$$, 8:00 PM ✅
+Reply "Book 1", "Book 2", or "Book 3" to confirm.</code>
+    </div>
+
+    <div class="command-block">
+      <code><span class="prompt">You:</span> Research business class return flights from Toronto to London 
+for May 15–22. Direct or max 1 stop. Show top 3 by price. 
+Don't book yet.
+
+<span class="response">Manus:</span> Top 3 options:
+1. ✈️ Air Canada — YYZ→LHR direct, $4,850 CAD, departs 9:30 PM
+2. ✈️ British Airways — YYZ→LHR direct, $5,100 CAD, departs 8:15 PM
+3. ✈️ Lufthansa — via FRA, $3,920 CAD, departs 1:45 PM (+5h connect)
+Reply "Book [1/2/3]" when ready — I'll hold for your payment 
+input before completing the transaction.</code>
+    </div>
+
+    <div class="warn-box">
+      <p class="warn-box-title">Financial Safety — Non-Negotiable</p>
+      <p>Manus never completes a financial transaction autonomously. For any booking requiring payment, it initiates the process, shows you the final checkout summary, and requires your "Confirm" before proceeding. You enter your payment details directly. Your card data never passes through the AI layer.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 10 -->
+<div class="container">
+  <div class="section body">
+    <span class="section-num">10 — Prompt Library</span>
+    <h2>Master Prompt Library for <em>Every Use Case</em></h2>
+    <p>Copy, save, and adapt these templates as your personal command vocabulary. The more context you give Manus upfront, the more polished and on-target the output will be on first pass — saving you iteration cycles.</p>
+
+    <div class="divider"><span>Presentations</span></div>
+    <div class="prompt-lib">
+      <div class="prompt-item"><span class="prompt-tag">DECK</span><p>Create a [N]-slide [executive / technical / sales] deck for [audience] on [topic]. Cover: [section 1], [section 2], [section 3]. Colour theme: [preference]. Format: PPTX.</p></div>
+      <div class="prompt-item"><span class="prompt-tag">SLIDE</span><p>Add a cost-benefit slide to the existing deck. Show [metric 1], [metric 2], and a [N]-year ROI projection assuming [cost] and [efficiency %] gain.</p></div>
+    </div>
+
+    <div class="divider"><span>Video</span></div>
+    <div class="prompt-lib">
+      <div class="prompt-item"><span class="prompt-tag">SCRIPT</span><p>Write a [duration]-second [LinkedIn / YouTube] video script on [topic]. Hook in the first 5 seconds. [Tone]. End with [CTA]. Include pacing cues.</p></div>
+      <div class="prompt-item"><span class="prompt-tag">AI VIDEO</span><p>Generate the approved script as a HeyGen video using my avatar. Return the download link when complete.</p></div>
+    </div>
+
+    <div class="divider"><span>LinkedIn</span></div>
+    <div class="prompt-lib">
+      <div class="prompt-item"><span class="prompt-tag">POST</span><p>Write a LinkedIn post on [topic]. [N] key points. First-person practitioner voice. Hook in line 1. End with a question. Max [N] words.</p></div>
+      <div class="prompt-item"><span class="prompt-tag">OUTREACH</span><p>Draft a LinkedIn DM to a [role] at a [company type]. My angle: [value prop]. Under 120 words. No pitch in the first message. CTA: [desired next step].</p></div>
+    </div>
+
+    <div class="divider"><span>Email</span></div>
+    <div class="prompt-lib">
+      <div class="prompt-item"><span class="prompt-tag">FOLLOW-UP</span><p>Send a follow-up to [contact] re: [topic]. Reference [specific point from the meeting]. Suggest [next step]. Tone: [warm / formal]. Sign off as me.</p></div>
+      <div class="prompt-item"><span class="prompt-tag">BATCH</span><p>Load [CSV file]. Draft personalised outreach for each row using [field 1] and [field 2] to personalise. Max [N] words each. Show me first [N] for approval before sending.</p></div>
+    </div>
+
+    <div class="divider"><span>Calendar and Tasks</span></div>
+    <div class="prompt-lib">
+      <div class="prompt-item"><span class="prompt-tag">MEETING</span><p>Book a [duration] call with [contact / email] on [day] between [time range]. Title: "[title]". Add [Meet / Zoom / Teams] link. Send invite to [attendees].</p></div>
+      <div class="prompt-item"><span class="prompt-tag">TASK</span><p>Create a Cowork task: "[title]". Priority: [High / Medium / Low]. Due: [date]. Context: [notes]. Assign to me.</p></div>
+      <div class="prompt-item"><span class="prompt-tag">BRIEFING</span><p>Send my daily briefing: today's calendar, open high-priority tasks, pending approvals, and one suggested first action.</p></div>
+    </div>
+
+    <div class="divider"><span>Bookings</span></div>
+    <div class="prompt-lib">
+      <div class="prompt-item"><span class="prompt-tag">RESTAURANT</span><p>Find a [cuisine] restaurant in [area] for [date], [time], [# people]. [Budget]. Online reservations required. Show top 3 options.</p></div>
+      <div class="prompt-item"><span class="prompt-tag">TRAVEL</span><p>Research [class] return flights from [origin] to [destination] for [dates]. [Stop preference]. Top 3 by [price / duration]. Don't book yet.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 11 -->
+<div class="container">
+  <div class="section body">
+    <span class="section-num">11 — Best Practices</span>
+    <h2>Tips, Limits, and <em>Making It Yours</em></h2>
+    <p>Manus is remarkably capable, but its output quality is a direct function of the context you give it. Here's what separates a serviceable AI assistant from one that genuinely runs your operations.</p>
+
+    <h3>Write a master system prompt</h3>
+    <p>The single highest-leverage action you can take is writing a detailed system prompt that tells Manus who you are and how you work. Include your name, role, industry, preferred communication style, meeting availability rules, default output formats, and standing rules — for example, "always use plain text in emails", "never schedule meetings on Friday afternoons", or "keep LinkedIn posts under 200 words." Set it once and it applies to every interaction, permanently.</p>
+
+    <h3>Use the approval gate deliberately</h3>
+    <p>Auto-execute for low-stakes and reversible actions. Require approval for irreversible or public ones. This gives you full speed on the 80% that doesn't need a second look, and full control over the 20% that does.</p>
+
+    <div class="cap-grid">
+      <div class="cap-card">
+        <div class="cap-card-icon">⚡</div>
+        <h4>Auto-Execute</h4>
+        <p>Drafts, files, calendar lookups, task creation, research and summarisation.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-card-icon">🔒</div>
+        <h4>Require Approval</h4>
+        <p>Sending emails, LinkedIn posts, calendar invites, any action touching a third party.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-card-icon">🛑</div>
+        <h4>Never Delegate</h4>
+        <p>Payment credentials, passwords, confidential client data, legally binding commitments.</p>
+      </div>
+    </div>
+
+    <h3>Full capability and approval matrix</h3>
+    <table class="matrix">
+      <thead>
+        <tr><th>Capability</th><th>What Manus Does</th><th>Approval</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Generate presentation</td><td>Draft and deliver file to Telegram</td><td><span class="badge badge-auto">Auto</span></td></tr>
+        <tr><td>Video script</td><td>Draft and deliver script file</td><td><span class="badge badge-auto">Auto</span></td></tr>
+        <tr><td>AI video generation</td><td>Submit to HeyGen / Synthesia on confirm</td><td><span class="badge badge-approval">Approval Required</span></td></tr>
+        <tr><td>LinkedIn post</td><td>Draft → preview → publish on confirm</td><td><span class="badge badge-approval">Approval Required</span></td></tr>
+        <tr><td>LinkedIn outreach DM</td><td>Draft → preview → send on confirm</td><td><span class="badge badge-approval">Approval Required</span></td></tr>
+        <tr><td>Send email</td><td>Draft → preview → send on confirm</td><td><span class="badge badge-approval">Approval Required</span></td></tr>
+        <tr><td>Create calendar invite</td><td>Check availability → propose slot → send on confirm</td><td><span class="badge badge-approval">Approval Required</span></td></tr>
+        <tr><td>Create Cowork task</td><td>Create immediately with context</td><td><span class="badge badge-auto">Auto</span></td></tr>
+        <tr><td>Morning briefing</td><td>Scheduled push to Telegram daily</td><td><span class="badge badge-auto">Auto</span></td></tr>
+        <tr><td>Restaurant / venue search</td><td>Return top 3 options, no booking made</td><td><span class="badge badge-auto">Auto</span></td></tr>
+        <tr><td>Restaurant booking</td><td>Hold slot → confirm → execute on approval</td><td><span class="badge badge-approval">Approval Required</span></td></tr>
+        <tr><td>Travel research</td><td>Return options, no booking made</td><td><span class="badge badge-auto">Auto</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Know the limits</h3>
+    <ul class="styled">
+      <li>Manus is only as capable as its connected integrations — if a tool isn't linked via API, it can't act on it</li>
+      <li>Real-time data like live flight prices requires Manus's web browsing mode to be active</li>
+      <li>Complex multi-step tasks may take a few minutes — let it run rather than interrupting mid-process</li>
+      <li>Always review anything going to an external audience — Manus gets the 80% right, your judgement completes the final 20%</li>
+      <li>The more standing context you give it via system prompt, the less it needs to ask for clarification on every task</li>
+    </ul>
+
+    <div class="pullquote">
+      <p>The best Manus setups don't try to automate everything at once. Identify the 10 recurring tasks that consume the most time and delegate those first. Master the workflow. Then expand from there.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-inner">
+    <span class="tag">A Practical Guide for IT Professionals · 2026</span>
+    <p>The Manus + Telegram architecture described in this guide is practical and deployable today — not a theoretical concept. Start with the morning briefing automation. It's the easiest entry point and delivers immediate, tangible value from day one. Once that's running, layer in presentations, emails, and LinkedIn. Within a few weeks, you'll have built a personal operating system that works for you around the clock.</p>
+    <br>
+    <p style="color: var(--gold); font-family: 'DM Mono', monospace; font-size: 12px;">The future of personal productivity isn't working harder — it's delegating smarter.</p>
+  </div>
+</div>
+
+</body>
+</html>
